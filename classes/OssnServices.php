@@ -11,9 +11,9 @@
 namespace Ossn\Component;
 class OssnServices {
 		/**
-		 * Generate a random key 
+		 * Generate a random key
 		 * This is a random key generated
-		 * A a key will be required to obtain the services 
+		 * A a key will be required to obtain the services
 		 *
 		 * @return string
 		 */
@@ -21,7 +21,7 @@ class OssnServices {
 				return hash('ripemd256', md5() . microtime() . rand(0, 2));
 		}
 		/**
-		 * Get a list of method for the api 
+		 * Get a list of method for the api
 		 * These methods can be removed, overwritten using the ossn_hook
 		 *
 		 * @return array
@@ -38,21 +38,22 @@ class OssnServices {
 								'user_is_friend',
 								'user_add_friend',
 								'user_remove_friend',
-								
+								'user_update_email',
+
 								'wall_add',
 								'wall_view',
 								'wall_list_user',
 								'wall_list_home',
 								'wall_list_group',
 								'wall_delete',
-								
+
 								'comments_list',
 								'comment_add',
 								'comment_delete',
-								
+
 								'like_add',
 								'unlike_set',
-								
+
 								'photos_album_add', //photos add in album
 								'photos_album_create', //album create
 								'photos_list',
@@ -65,9 +66,9 @@ class OssnServices {
 								'photos_delete_cover',
 								'photos_profile_add',
 								'photos_cover_add',
-								
+
 								'groups_user_memberof',
-								'groups_view', 
+								'groups_view',
 								'groups_join',
 								'groups_unjoin',
 								'groups_requests',
@@ -75,22 +76,22 @@ class OssnServices {
 								'groups_edit',
 								'groups_request_accept',
 								'groups_request_decline',
-								
+
 								'notifications_list_user',
 								'notifications_mark_viewed',
 								'notifications_count',
-								
+
 								'message_add',
-								'message_delete', 
+								'message_delete',
 								'message_list',
 								'message_recent',
 								'message_new',
-								
+
 						)
 				));
 		}
 		/**
-		 * Make sure the key is valid when someone request for API 
+		 * Make sure the key is valid when someone request for API
 		 * This will make sure not all users can access the API
 		 *
 		 * @return boolean
@@ -103,7 +104,7 @@ class OssnServices {
 				return false;
 		}
 		/**
-		 * Default API params 
+		 * Default API params
 		 * This will add some default api parameters.
 		 *
 		 * @return array
@@ -114,11 +115,11 @@ class OssnServices {
 						'url' => ossn_site_url(input('api_method')),
 						'time_token' => time(),
 						'payload' => false,
-						
+
 				);
 		}
 		/**
-		 * Display the response 
+		 * Display the response
 		 * This will output JSON formatted response
 		 *
 		 * @return void
@@ -158,7 +159,7 @@ class OssnServices {
 				));
 		}
 		/**
-		 * This will set the users from OssnUser instance,  
+		 * This will set the users from OssnUser instance,
 		 * This will make sure no sensitive pass to the response
 		 *
 		 * @param object $user A OssnUser
@@ -169,7 +170,7 @@ class OssnServices {
 				$cover = false;
 				if(!$user){
 					return false;
-				}	
+				}
 				if($user && $user->getProfileCover()){
 					$cover = (new \OssnProfile())->getCoverURL($user);
 				}
@@ -185,7 +186,7 @@ class OssnServices {
 						'gender' => $user->gender,
 						'icon' => array(
 							'topbar' => $user->iconURL()->topbar,
-							'smaller' => $user->iconURL()->smaller,			
+							'smaller' => $user->iconURL()->smaller,
 							'small' => $user->iconURL()->small,
 							'larger' => $user->iconURL()->larger,
 							'large' => $user->iconURL()->large,
@@ -201,11 +202,11 @@ class OssnServices {
 						'icon' => array(
 							'small' => $user->iconURL()->small,
 						),
-					);					
+					);
 				}
 		}
 		/**
-		 * This will handle all the requests  
+		 * This will handle all the requests
 		 * Here we make sure the API is valid and the method exists in the system
 		 * Each mehtod have a view called services/<api version>/<method name>
 		 *
@@ -217,12 +218,12 @@ class OssnServices {
 				$version = $requests[0];
 				$request = $requests[1];
 				$methods = $this->getMethods();
-				
+
 				if(!isset($methods[$version]) || !ossn_services_apikey()) {
 						$this->throwError('107', ossn_print('ossnservices:invalidversion'));
-						
+
 				}
-				if((!isset($methods[$version]) && !in_array($request, $methods[$version])) || (isset($methods[$version]) && !in_array($request, $methods[$version]))) { 
+				if((!isset($methods[$version]) && !in_array($request, $methods[$version])) || (isset($methods[$version]) && !in_array($request, $methods[$version]))) {
 						$this->throwError('101', ossn_print('ossnservices:invalidmethod'));
 				}
 				if(!$this->validRequest()) {
