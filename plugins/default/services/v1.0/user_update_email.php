@@ -10,8 +10,6 @@
  $guid       = input('guid');
  $email      = input('new_email');
 
-// $params['OssnServices']->throwError('103', 'No email provided');
-
  if($guid) {
  		$user = ossn_user_by_guid($guid);
  }
