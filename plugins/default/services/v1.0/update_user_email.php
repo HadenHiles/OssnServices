@@ -16,6 +16,7 @@
  $currentUser = ossn_loggedin_user();
  if($user && $user->guid == $currentUser->guid) {
  		$OssnUser           = new OssnUser;
+    $OssnUser->email    = $email;
 
  		if(empty($email)) {
  				$params['OssnServices']->throwError('103', 'No email provided');
